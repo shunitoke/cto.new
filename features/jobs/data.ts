@@ -16,7 +16,7 @@ const roleTemplates: RoleTemplate[] = [
   {
     title: "Frontend Engineer (React)",
     tags: ["React", "TypeScript", "Tailwind"],
-    experience: "mid",
+    experience: "between3And6",
     salaryMin: 200000,
     salaryMax: 320000,
     currency: "RUB",
@@ -25,7 +25,7 @@ const roleTemplates: RoleTemplate[] = [
   {
     title: "Backend Engineer (Node.js)",
     tags: ["Node.js", "PostgreSQL", "REST"],
-    experience: "mid",
+    experience: "between3And6",
     salaryMin: 220000,
     salaryMax: 350000,
     currency: "RUB",
@@ -34,7 +34,7 @@ const roleTemplates: RoleTemplate[] = [
   {
     title: "Fullstack Engineer (Next.js)",
     tags: ["Next.js", "React", "TypeScript"],
-    experience: "senior",
+    experience: "moreThan6",
     salaryMin: 300000,
     salaryMax: 450000,
     currency: "RUB",
@@ -43,7 +43,7 @@ const roleTemplates: RoleTemplate[] = [
   {
     title: "Data Analyst (Product)",
     tags: ["SQL", "Amplitude", "A/B tests"],
-    experience: "junior",
+    experience: "between1And3",
     salaryMin: 140000,
     salaryMax: 220000,
     currency: "RUB",
@@ -52,7 +52,7 @@ const roleTemplates: RoleTemplate[] = [
   {
     title: "DevOps Engineer", 
     tags: ["Kubernetes", "Terraform", "CI/CD"],
-    experience: "senior",
+    experience: "moreThan6",
     salaryMin: 320000,
     salaryMax: 480000,
     currency: "RUB",
@@ -61,7 +61,7 @@ const roleTemplates: RoleTemplate[] = [
   {
     title: "QA Engineer (Automation)",
     tags: ["Playwright", "API tests", "CI"],
-    experience: "mid",
+    experience: "between3And6",
     salaryMin: 180000,
     salaryMax: 260000,
     currency: "RUB",
@@ -70,7 +70,7 @@ const roleTemplates: RoleTemplate[] = [
   {
     title: "Mobile Engineer (React Native)",
     tags: ["React Native", "iOS", "Android"],
-    experience: "mid",
+    experience: "between3And6",
     salaryMin: 220000,
     salaryMax: 360000,
     currency: "RUB",
@@ -79,7 +79,7 @@ const roleTemplates: RoleTemplate[] = [
   {
     title: "ML Engineer (NLP)",
     tags: ["Python", "LLMs", "MLOps"],
-    experience: "lead",
+    experience: "moreThan6",
     salaryMin: 420000,
     salaryMax: 650000,
     currency: "RUB",
@@ -123,7 +123,7 @@ function buildDescription(role: RoleTemplate, city: string, remote: boolean): st
     "- Keep code quality high with tests, reviews and pragmatic refactoring",
     "",
     "What we're looking for:",
-    `- ${role.experience === "intern" ? "A strong interest" : "Hands-on experience"} with ${role.tags.join(", ")}`,
+    `- ${role.experience === "noExperience" ? "A strong interest" : "Hands-on experience"} with ${role.tags.join(", ")}`,
     "- Clear written communication and async collaboration",
     "- Ability to work with ambiguous requirements and propose solutions",
     "",
@@ -140,6 +140,8 @@ export const allJobs: Job[] = Array.from({ length: 72 }, (_v, i) => {
 
   const id = String(i + 1);
   const salaryJitter = (i % 5) * 10000;
+  const now = new Date();
+  const publishedDate = new Date(now.getTime() - i * 24 * 60 * 60 * 1000); // Spread across days
 
   return {
     id,
@@ -153,5 +155,12 @@ export const allJobs: Job[] = Array.from({ length: 72 }, (_v, i) => {
     currency: role.currency,
     tags: role.tags,
     description: buildDescription(role, location.city, location.remote),
+    publishedAt: publishedDate.toISOString(),
+    url: `https://api.hh.ru/vacancies/${id}`,
+    applyUrl: `https://hh.ru/applicant/vacancy_response?vacancyId=${id}`,
+    employer: {
+      id: `employer_${i % 8}`,
+      name: company,
+    },
   } satisfies Job;
 });

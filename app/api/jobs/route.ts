@@ -12,7 +12,7 @@ const querySchema = z.object({
   city: z.string().optional(),
   salaryMin: z.coerce.number().int().nonnegative().optional(),
   salaryMax: z.coerce.number().int().nonnegative().optional(),
-  experience: z.enum(["intern", "junior", "mid", "senior", "lead"]).optional(),
+  experience: z.enum(["noExperience", "between1And3", "between3And6", "moreThan6"]).optional(),
   remote: z
     .enum(["true", "false"])
     .optional()
@@ -54,17 +54,25 @@ export async function GET(request: NextRequest) {
     });
   }
 
-  const result = searchJobs(
-    {
-      keyword: parsed.data.q,
-      city: parsed.data.city,
-      salaryMin: parsed.data.salaryMin,
-      salaryMax: parsed.data.salaryMax,
-      experience: parsed.data.experience,
-      remoteOnly: parsed.data.remote,
-    },
-    { offset, limit: parsed.data.limit },
-  );
+  try {
+    const result = await searchJobs(
+      {
+        keyword: parsed.data.q,
+        city: parsed.data.city,
+        salaryMin: parsed.data.salaryMin,
+        salaryMax: parsed.data.salaryMax,
+        experience: parsed.data.experience,
+        remoteOnly: parsed.data.remote,
+      },
+      { offset, limit: parsed.data.limit },
+    );
 
-  return NextResponse.json(result);
+    return NextResponse.json(result);
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Unknown error occurred";
+    return jsonError(500, {
+      error: "SEARCH_FAILED",
+      message: `Failed to search jobs: ${message}`,
+    });
+  }
 }

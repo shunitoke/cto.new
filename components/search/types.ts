@@ -1,4 +1,4 @@
-export type ExperienceLevel = "intern" | "junior" | "mid" | "senior" | "lead";
+export type ExperienceLevel = "noExperience" | "between1And3" | "between3And6" | "moreThan6";
 
 export type Job = {
   id: string;
@@ -6,12 +6,21 @@ export type Job = {
   company: string;
   city: string;
   remote: boolean;
-  experience: ExperienceLevel;
+  experience?: ExperienceLevel;
   salaryMin: number | null;
   salaryMax: number | null;
-  currency: "RUB" | "USD" | "EUR";
+  currency: "RUB" | "USD" | "EUR" | "KZT" | "BYN" | "UAH" | "AZN" | "UZS" | "GEL";
   tags: string[];
   description: string;
+  publishedAt?: string;
+  url?: string;
+  applyUrl?: string;
+  employer?: {
+    id: string;
+    name: string;
+    logo?: string;
+    trusted?: boolean;
+  };
 };
 
 export type JobsResponse = {

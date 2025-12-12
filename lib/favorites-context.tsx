@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import type { Job } from "@/components/search/types";
+import type { Job, ExperienceLevel } from "@/components/search/types";
 
 export type FavoriteJob = {
   id: string;
@@ -9,10 +9,10 @@ export type FavoriteJob = {
   company: string;
   city: string;
   remote: boolean;
-  experience: "intern" | "junior" | "mid" | "senior" | "lead";
+  experience?: ExperienceLevel;
   salaryMin: number | null;
   salaryMax: number | null;
-  currency: "RUB" | "USD" | "EUR";
+  currency: "RUB" | "USD" | "EUR" | "KZT" | "BYN" | "UAH" | "AZN" | "UZS" | "GEL";
   tags: string[];
   savedAt: string;
 };
@@ -49,10 +49,10 @@ interface RawFavoriteData {
   company: string;
   city: string;
   remote: boolean;
-  experience: string;
+  experience?: string;
   salaryMin?: number | null;
   salaryMax?: number | null;
-  currency?: "RUB" | "USD" | "EUR";
+  currency?: "RUB" | "USD" | "EUR" | "KZT" | "BYN" | "UAH" | "AZN" | "UZS" | "GEL";
   tags: string[];
   savedAt: string;
 }
@@ -66,7 +66,6 @@ function deserializeJob(data: unknown): FavoriteJob | null {
       typeof obj?.company === "string" &&
       typeof obj?.city === "string" &&
       typeof obj?.remote === "boolean" &&
-      typeof obj?.experience === "string" &&
       Array.isArray(obj?.tags) &&
       typeof obj?.savedAt === "string"
     ) {
@@ -76,7 +75,7 @@ function deserializeJob(data: unknown): FavoriteJob | null {
         company: obj.company,
         city: obj.city,
         remote: obj.remote,
-        experience: obj.experience as "intern" | "junior" | "mid" | "senior" | "lead",
+        experience: obj.experience as ExperienceLevel | undefined,
         salaryMin: obj.salaryMin ?? null,
         salaryMax: obj.salaryMax ?? null,
         currency: obj.currency ?? "RUB",
