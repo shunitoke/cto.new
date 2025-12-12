@@ -2,6 +2,9 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 
 import { ThemeProvider } from "@/components/theme-provider";
+import { FavoritesProvider } from "@/lib/favorites-context";
+import { AlertsProvider } from "@/lib/alerts-context";
+import { Toaster } from "@/components/ui/toaster";
 import { cn } from "@/lib/utils";
 
 import "./globals.css";
@@ -36,7 +39,12 @@ export default function RootLayout({
         )}
       >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          <div className="min-h-screen">{children}</div>
+          <FavoritesProvider>
+            <AlertsProvider>
+              <div className="min-h-screen">{children}</div>
+              <Toaster />
+            </AlertsProvider>
+          </FavoritesProvider>
         </ThemeProvider>
       </body>
     </html>

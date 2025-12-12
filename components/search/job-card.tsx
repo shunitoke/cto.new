@@ -1,15 +1,17 @@
 "use client";
 
 import * as React from "react";
-import { Building2, MapPin } from "lucide-react";
+import { Building2, MapPin, Heart } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { Job } from "@/components/search/types";
 import { formatExperience, formatSalary } from "@/components/search/format";
 import { useInView } from "@/components/search/use-in-view";
 import { useJobAnalysis } from "@/components/search/use-job-analysis";
+import { useFavorites } from "@/lib/favorites-context";
 import { cn } from "@/lib/utils";
 
 function scoreVariant(score: number): "success" | "warning" | "destructive" {
@@ -29,6 +31,17 @@ export function JobCard({
 }) {
   const { ref, inView } = useInView<HTMLDivElement>({ rootMargin: "250px" });
   const analysis = useJobAnalysis(job, inView);
+  const { isFavorite, addFavorite, removeFavorite } = useFavorites();
+  const isJobFavorite = isFavorite(job.id);
+
+  const handleFavoriteClick = React.useCallback((e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (isJobFavorite) {
+      removeFavorite(job.id);
+    } else {
+      addFavorite(job);
+    }
+  }, [isJobFavorite, job, addFavorite, removeFavorite]);
 
   return (
     <div ref={ref}>
@@ -61,6 +74,17 @@ export function JobCard({
           </div>
 
           <div className="flex shrink-0 flex-col items-end gap-2">
+            <Button
+              size="icon"
+              variant="ghost"
+              onClick={handleFavoriteClick}
+              className={cn(
+                "h-8 w-8",
+                isJobFavorite && "text-red-500 hover:text-red-600"
+              )}
+            >
+              <Heart className={cn("h-4 w-4", isJobFavorite && "fill-current")} />
+            </Button>
             {analysis.isLoading ? (
               <Skeleton className="h-5 w-16" />
             ) : analysis.error ? (
