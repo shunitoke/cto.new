@@ -9,7 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { useFavorites } from "@/lib/favorites-context";
 import { JobDetailSheet } from "@/components/search/job-detail-sheet";
 import { formatExperience, formatSalary } from "@/components/search/format";
-import type { Job } from "@/components/search/types";
+import type { Job, ExperienceLevel } from "@/components/search/types";
 import { cn } from "@/lib/utils";
 
 export default function FavoritesPage() {
@@ -35,24 +35,35 @@ export default function FavoritesPage() {
     company: string;
     city: string;
     remote: boolean;
-    experience: "intern" | "junior" | "mid" | "senior" | "lead";
+    experience?: string;
     salaryMin: number | null;
     salaryMax: number | null;
-    currency: "RUB" | "USD" | "EUR";
+    currency: "RUB" | "USD" | "EUR" | "KZT" | "BYN" | "UAH" | "AZN" | "UZS" | "GEL";
     tags: string[];
-  }): Job => ({
-    id: favorite.id,
-    title: favorite.title,
-    company: favorite.company,
-    city: favorite.city,
-    remote: favorite.remote,
-    experience: favorite.experience,
-    salaryMin: favorite.salaryMin,
-    salaryMax: favorite.salaryMax,
-    currency: favorite.currency,
-    tags: favorite.tags,
-    description: "", // Favorites don't store full descriptions
-  });
+  }): Job => {
+    const validExperience = [
+      "noExperience",
+      "between1And3",
+      "between3And6",
+      "moreThan6",
+    ].includes(favorite.experience || "")
+      ? (favorite.experience as ExperienceLevel)
+      : undefined;
+
+    return {
+      id: favorite.id,
+      title: favorite.title,
+      company: favorite.company,
+      city: favorite.city,
+      remote: favorite.remote,
+      experience: validExperience,
+      salaryMin: favorite.salaryMin,
+      salaryMax: favorite.salaryMax,
+      currency: favorite.currency,
+      tags: favorite.tags,
+      description: "", // Favorites don't store full descriptions
+    };
+  };
 
   return (
     <div className="min-h-screen">

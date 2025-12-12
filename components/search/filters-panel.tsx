@@ -79,11 +79,10 @@ export function FiltersPanel({
           className="flex h-9 w-full rounded-md border border-input bg-background px-3 text-sm shadow-sm"
         >
           <option value="any">Any</option>
-          <option value="intern">Intern</option>
-          <option value="junior">Junior</option>
-          <option value="mid">Mid</option>
-          <option value="senior">Senior</option>
-          <option value="lead">Lead</option>
+          <option value="noExperience">No Experience</option>
+          <option value="between1And3">1-3 Years</option>
+          <option value="between3And6">3-6 Years</option>
+          <option value="moreThan6">6+ Years</option>
         </select>
       </div>
 

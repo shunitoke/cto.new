@@ -4,7 +4,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { z } from "zod";
 
 import { redis } from "@/lib/redis";
-import { searchJobs } from "@/features/jobs";
+import { searchJobs, type ExperienceLevel } from "@/features/jobs";
 
 const checkSchema = z.object({
   token: z.string().min(1),
@@ -15,7 +15,7 @@ type FilterDefinition = {
   name: string;
   query: string;
   city?: string;
-  experience?: string;
+  experience?: ExperienceLevel;
   remoteOnly?: boolean;
   salaryMin?: number;
   salaryMax?: number;
@@ -74,11 +74,11 @@ async function updateLastSeenJobs(filterId: string, jobIds: string[]) {
 
 async function searchJobsForFilter(filter: FilterDefinition) {
   try {
-    const result = searchJobs(
+    const result = await searchJobs(
       {
         keyword: filter.query,
         city: filter.city,
-        experience: filter.experience as "intern" | "junior" | "mid" | "senior" | "lead" | undefined,
+        experience: filter.experience,
         remoteOnly: filter.remoteOnly,
         salaryMin: filter.salaryMin,
         salaryMax: filter.salaryMax,
