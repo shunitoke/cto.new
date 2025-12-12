@@ -20,6 +20,8 @@ import { JobCard } from "@/components/search/job-card";
 import { useDebouncedValue } from "@/components/search/use-debounced-value";
 import { useInView } from "@/components/search/use-in-view";
 import { JobDetailSheet } from "@/components/search/job-detail-sheet";
+import { NotificationBell } from "@/components/notifications/notification-bell";
+import { AlertsManager } from "@/components/search/alerts-manager";
 
 const PAGE_SIZE = 12;
 
@@ -163,6 +165,7 @@ export default function SearchPage() {
           </div>
 
           <div className="flex items-center gap-2">
+            <NotificationBell />
             <Button
               variant="outline"
               size="sm"
@@ -188,9 +191,14 @@ export default function SearchPage() {
 
       <main className="mx-auto grid max-w-6xl grid-cols-1 gap-4 px-4 py-4 lg:grid-cols-[340px_1fr]">
         <aside className="hidden lg:block">
-          <div className="rounded-lg border p-4">
-            <div className="mb-3 text-sm font-semibold">Filters</div>
-            <FiltersPanel value={filters} onChange={setFilters} facets={facets} />
+          <div className="space-y-4">
+            <div className="rounded-lg border p-4">
+              <div className="mb-3 text-sm font-semibold">Filters</div>
+              <FiltersPanel value={filters} onChange={setFilters} facets={facets} />
+            </div>
+            <div className="rounded-lg border p-4">
+              <AlertsManager filters={filters} facets={facets} />
+            </div>
           </div>
         </aside>
 
@@ -281,10 +289,16 @@ export default function SearchPage() {
       <Sheet open={filtersOpen} onOpenChange={setFiltersOpen}>
         <SheetContent side="left" className="flex flex-col">
           <SheetHeader>
-            <SheetTitle>Filters</SheetTitle>
+            <SheetTitle>Filters & Alerts</SheetTitle>
           </SheetHeader>
-          <SheetBody className="overflow-y-auto">
-            <FiltersPanel value={filters} onChange={setFilters} facets={facets} />
+          <SheetBody className="overflow-y-auto space-y-6">
+            <div>
+              <div className="mb-3 text-sm font-semibold">Filters</div>
+              <FiltersPanel value={filters} onChange={setFilters} facets={facets} />
+            </div>
+            <div>
+              <AlertsManager filters={filters} facets={facets} />
+            </div>
           </SheetBody>
         </SheetContent>
       </Sheet>
